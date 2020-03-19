@@ -1,0 +1,108 @@
+import java.util.Scanner;
+import java.lang.Float;
+
+
+public class Board {
+
+
+
+
+
+
+
+
+    public static void main(String[] args) {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Select an NxN board of size: ");
+        int N = Integer.parseInt(scan.next());
+        Float Board[][] = new Float[N][N];
+        Float TempBoard[][] = new Float[N][N];
+        for(int i = 0;i < N;i++) {
+            for(int j = 0; j < N; j++) {
+                Board[i][j] = Float.parseFloat("0");
+                TempBoard[i][j] = Float.parseFloat("0");
+            }
+        }
+
+        System.out.println("Select X-Coordinate of Start: ");
+        int X = Integer.parseInt(scan.next()) - 1;
+        System.out.println("Select Y-Coordinate of Start: ");
+        int Y = Integer.parseInt(scan.next()) - 1;
+        System.out.println("SELECT Probability of Staying in Same Location: ");
+        Float ProbStay = Float.parseFloat(scan.next());
+        System.out.println("SELECT Probability of Moving (Up,Down,Left,Right) to Some Location: ");
+        Float ProbMove = Float.parseFloat(scan.next());
+        System.out.println("Select Number of Iterations: ");
+        int iterations = Integer.parseInt(scan.next());
+        int k = 0;
+        int Tot = 0;
+        float newVal;
+        Board[X][Y] = Float.parseFloat("1");
+        while(iterations > k) {
+            if(k == 0) {
+                System.out.println("Iteration: " + k);
+                for(int i = 0;i < N;i++) {
+                    for(int j =0; j < N; j++) {
+                        TempBoard[i][j] = Float.parseFloat("0");
+                        System.out.print(Board[i][j] + " ");
+                    }
+                    System.out.println();
+                }
+            } else {
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < N; j++) {
+                        newVal = ProbStay*Board[i][j];
+                        if (i + 1 < N) {
+                            TempBoard[i][j] = TempBoard[i][j] + Board[i + 1][j] * ProbMove;
+                                Tot++;
+
+                        }
+                        if (i - 1 > 0) {
+                            TempBoard[i][j] = TempBoard[i][j]  + Board[i - 1][j] * ProbMove;
+                            Tot++;
+
+                        }
+                        if (j + 1 < N) {
+                            TempBoard[i][j] = TempBoard[i][j] +  Board[i][j + 1] * ProbMove;
+                                Tot++;
+
+                        }
+                        if (j - 1 > 0) {
+
+                            TempBoard[i][j] = TempBoard[i][j] + Board[i][j - 1] * ProbMove;
+                                Tot++;
+
+                        }
+                        if(Tot <= 0) {
+
+                            TempBoard[i][j] =   ProbStay * Board[i][j];
+                        } else {
+                            TempBoard[i][j] = (TempBoard[i][j]/Tot) + ProbStay*Board[i][j];
+                        }
+
+                        Tot = 0;
+                    }
+                }
+
+                System.out.println("Iteration: " + k);
+                float TotalProbability = 0;
+                for (int i = 0; i < N; i++) {
+                    for (int j = 0; j < N; j++) {
+                        Board[i][j] = TempBoard[i][j];
+                        TempBoard[i][j] = Float.parseFloat("0");
+                        TotalProbability = Board[i][j] + TotalProbability;
+                        System.out.print(Board[i][j] + " ");
+                    }
+                    System.out.println();
+                }
+
+                System.out.println("Total Probability = " + TotalProbability);
+
+            }
+
+            k++;
+        }
+
+
+    }
+}
